@@ -83,11 +83,10 @@ def main():
         #1- Policy evaluation
         u1 = u.copy()
         u = return_policy_evaluation(p, u, r, T, gamma)
-        
-		#Stopping criteria
-        # ToDo: write the stopping crateria
-		delta = 1000        
-		if delta < -1: break
+
+        #Stopping criteria
+        delta = np.sum(abs(u-u1))
+        if delta < epsilon * (1-gamma) *gamma: break
         for s in range(12):
             if not np.isnan(p[s]) and not p[s]==-1:
                 v = np.zeros((1,12))

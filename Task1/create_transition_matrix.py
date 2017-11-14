@@ -1,8 +1,6 @@
 import numpy as np
 
 
-# TODO create matrix
-
 class Cell:
     def __init__(self, line, col):
         self.line = line
@@ -70,10 +68,13 @@ class Field:
     def coords_from_index(self, index):
         return (index % self.cols, index // self.cols)
 
+    def position_is_blocked(self, position):
+        return position in self.blocked_cells
+
     def position_is_possible(self, final_position):
         return 0 <= final_position[0] < self.cols and \
-                                0 <= final_position[1] < self.lines and \
-                        final_position not in self.blocked_cells
+                                0 <= final_position[1] < self.lines and\
+               not self.position_is_blocked(final_position)
 
     def is_terminal_state(self, y_coord, x_coord):
         return (y_coord, x_coord) in self.succsess_cells_list or (y_coord, x_coord) in self.defeat_cells_list
@@ -87,7 +88,7 @@ class Field:
 
                     start_coords = (y,x)
                     start_position_indx = self.index_from_coords(x=x, y=y)
-                    if self.is_terminal_state( x_coord= x, y_coord=y):
+                    if self.is_terminal_state( x_coord= x, y_coord=y) or self.position_is_blocked((y,x)):
                         continue
 
 

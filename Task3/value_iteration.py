@@ -55,7 +55,7 @@ def generate_graph(utility_list):
 def main():
     #Change as you want
     tot_states = 12
-    gamma = 0.9 #Discount factor
+    gamma = 0.9999 #Discount factor
     iteration = 0 #Iteration counter
     epsilon = 0.01 #Stopping criteria small value
 
