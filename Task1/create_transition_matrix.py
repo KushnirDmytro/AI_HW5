@@ -60,17 +60,15 @@ class Field:
 
     def position_is_possible(self, final_position):
         return 0 <= final_position[0] < self.lines and \
-                                0 <= final_position[1] < self.cols and\
+               0 <= final_position[1] < self.cols and \
                not self.position_is_blocked(final_position)
 
     def is_terminal_state(self, y_coord, x_coord):
         return (y_coord, x_coord) in self.succsess_cells_list or (y_coord, x_coord) in self.defeat_cells_list
 
-
-
     def fill_transition_matrix(self):
 
-        #filing special cells to preserv "Markov" matrix --- contraidcts to decision method
+        # filing special cells to preserv "Markov" matrix --- contraidcts to decision method
         # for a in range(len(self.moves)):
         #     for el in self.blocked_cells:
         #         self.np_matrix[a][self.index_from_coords(x=el[1], y=el[0])][self.index_from_coords(x=el[1], y=el[0])] = 1
@@ -83,11 +81,10 @@ class Field:
             for y in range(self.lines):
                 for x in range(self.cols):
 
-                    start_coords = (y,x)
+                    start_coords = (y, x)
                     start_position_indx = self.index_from_coords(x=x, y=y)
-                    if self.is_terminal_state( x_coord= x, y_coord=y) or self.position_is_blocked((y,x)):
+                    if self.is_terminal_state(x_coord=x, y_coord=y) or self.position_is_blocked((y, x)):
                         continue
-
 
                     for transition_name in self.moves[move_indx].moves_dict:
                         exactly_this_transition_prob = self.moves[move_indx].moves_dict[transition_name]
@@ -98,13 +95,11 @@ class Field:
                                                                      y=final_position_coords[0])
 
                         if self.position_is_possible(final_position_coords):
-                            self.np_matrix[move_indx][start_position_indx][final_position_indx] += exactly_this_transition_prob
+                            self.np_matrix[move_indx][start_position_indx][
+                                final_position_indx] += exactly_this_transition_prob
                         else:  # case of impossible final_transition
                             self.np_matrix[move_indx][start_position_indx][
                                 start_position_indx] += exactly_this_transition_prob
-
-
-
 
     def get_transition_matrix(self):
         return self.np_matrix
@@ -118,17 +113,16 @@ class Field:
 
                     line = ""
                     for x in range(self.cols):
-                        if (y,x) == (1,1):
-                            line+= " *  "
+                        if (y, x) == (1, 1):
+                            line += " *  "
                             continue
                         line += str(self.np_matrix[m][k][self.index_from_coords(x=x, y=y)]) + " "
                     print(line)
 
 
-
 list_of_blocked_cells = [(1, 1)]  # coords
-finish_list = [(0,3)]  # good_endgame
-death_list = [(1,3)]  # bad andgame
+finish_list = [(0, 3)]  # good_endgame
+death_list = [(1, 3)]  # bad andgame
 
 move_top = Move(dirs_and_probabilities_dict={'top': 0.8, 'bot': 0.0, 'left': 0.1, 'right': 0.1})
 move_right = Move(dirs_and_probabilities_dict={'top': 0.1, 'bot': 0.1, 'left': 0.0, 'right': 0.8})
