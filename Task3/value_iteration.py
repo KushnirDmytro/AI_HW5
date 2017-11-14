@@ -23,7 +23,7 @@ def return_state_utility(v, T, u, reward, gamma):
         actions_results_probalilities.append(np.dot(v, T[move]))
     # now we have coefficients of transition probalilities to neighbouring states
     for a in range(len(action_array)):
-        action_array[a] = np.sum(actions_results_probalilities[a] * u)
+        action_array[a] = np.dot(actions_results_probalilities[a], u)
 
     #print(actions_results_probalilities)
     state_utility = reward + gamma * max(action_array)

@@ -10,11 +10,6 @@ class Cell:
         return (self.col, self.line)
 
 
-#
-# class Block_Cell(Cell):
-#     def __init__(self, line, col):
-#         Cell.__init__(line=line, col= col)
-
 
 class Succsess_Cell(Cell):
     def __init__(self, line, col, bonus):
@@ -29,12 +24,6 @@ class Defeat_Cell(Cell):
 
 
 class Rules:
-    # alt_moves_dict = {  # what to do if original move is unavailable
-    #     'top': ['left', 'right'],
-    #     'right': ['top', 'bot'],
-    #     'bot': ['left', 'right'],
-    #     'left': ['top', 'bot']
-    # }
     moves_dirs = {
         'top': (-1, 0),
         'right': (0, 1),
@@ -82,6 +71,16 @@ class Field:
 
 
     def fill_transition_matrix(self):
+
+        #filing special cells to preserv "Markov" matrix --- contraidcts to decision method
+        # for a in range(len(self.moves)):
+        #     for el in self.blocked_cells:
+        #         self.np_matrix[a][self.index_from_coords(x=el[1], y=el[0])][self.index_from_coords(x=el[1], y=el[0])] = 1
+        #     for el in self.defeat_cells_list:
+        #         self.np_matrix[a][self.index_from_coords(x=el[1], y=el[0])][self.index_from_coords(x=el[1], y=el[0])] = 1
+        #     for el in self.succsess_cells_list:
+        #         self.np_matrix[a][self.index_from_coords(x=el[1],y= el[0])][self.index_from_coords(x=el[1], y=el[0])] = 1
+
         for move_indx in range(len(self.moves)):  # switching over moves
             for y in range(self.lines):
                 for x in range(self.cols):
@@ -107,10 +106,7 @@ class Field:
                                 start_position_indx] += exactly_this_transition_prob
 
 
-                            # if (x,y) == (1, 2):
-                            #     self.np_matrix[move_indx][x][y] = move_indx
 
-        pass
 
     def get_transition_matrix(self):
         return self.np_matrix

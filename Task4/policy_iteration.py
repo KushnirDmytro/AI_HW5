@@ -6,16 +6,24 @@
 import numpy as np
 
 def return_policy_evaluation(p, u, r, T, gamma):
-    NewU = np.zeros(12)
-    # print(p)
+    #newU = np.zeros(12) # in case of returnitg new utulities, there are more iterations (24 VS 33)
+    for state in range(len(u)):
+        u[state] = r[state] + gamma * np.dot(u, T[p[state]][state])
+
+    return u
+    # NewU = np.zeros(12)
+    # # print(p)
+    # print("=======>")
     # print(u)
-
-    for state in range(len(u)) :
-        policy = p[state]
-        if not np.isnan(policy) and not policy == -1:
-            NewU[state] = r[state] + gamma * np.sum(np.dot(u, T[p[state]]))
-
-    return NewU
+    #
+    # for state in range(len(u)) :
+    #     policy = p[state]
+    #     if not policy==-2 and not policy == -1:
+    #         u[state] = r[state] + gamma * np.sum(np.dot(u, T[policy]))
+        # else:
+        #     if policy == -1:
+        #         NewU[state] = r[state]
+    return u
 
 
 
@@ -32,10 +40,27 @@ def return_expected_action(u, T, v):
     @return expected action (int)
     """
     actions_array = np.zeros(4)
-
     expected_action = max(actions_array)
 
-    expected_action = 1
+    for action in range(len(actions_array)):
+        a = np.dot(v, T[action])
+        # print(a)
+        # print ("======================================================")
+        # #b = np.dot(v, T[action])
+        # #print(b)
+        # print ("======================================================")
+        # print ("======================================================")
+        # print ("======================================================")
+        c = np.dot(a,u)
+        # print(u)
+        # print(c)
+        actions_array[action] = c[0]
+        pass
+        # actions_array[action] = np.dot(v, T)
+
+
+
+    expected_action = np.argmax(actions_array)
 	
 	#ToDo: Return the expected action.
     return expected_action
@@ -56,10 +81,10 @@ def print_policy(p, shape):
         for col in range(shape[1]):
             if(p[counter] == -1): policy_string += " *  "
             elif(p[counter] == 0): policy_string += " ^  "
-            elif(p[counter] == 1): policy_string += " <  "
+            elif(p[counter] == 1): policy_string += " >  "
             elif(p[counter] == 2): policy_string += " v  "
-            elif(p[counter] == 3): policy_string += " >  "
-            elif(np.isnan(p[counter])): policy_string += " #  "
+            elif(p[counter] == 3): policy_string += " <  "
+            elif(p[counter]==-2): policy_string += " #  "
             counter += 1
         policy_string += '\n'
     print(policy_string)
@@ -74,14 +99,16 @@ def main():
 
     #Generate the first policy randomly
     # Nan=Nothing, -1=Terminal, 0=Up, 1=Left, 2=Down, 3=Right
-    p = np.random.randint(0, 4, size=(12)).astype(np.float32)
-    p[5] = np.NaN
+    p = np.random.randint(0, 4, size=(12))
+    p[5] = -2 #don't like arrays of floats here
     p[3] = p[7] = -1
 
     #Utility vectors
     u = np.array([0.0, 0.0, 0.0,  0.0,
                    0.0, 0.0, 0.0,  0.0,
                    0.0, 0.0, 0.0,  0.0])
+
+    #u[0,3] = [0,3]
 
     #Reward vector
     r = np.array([-0.04, -0.04, -0.04,  +1.0,
@@ -97,14 +124,19 @@ def main():
 
         #Stopping criteria
         delta = np.sum(abs(u-u1))
+
+        print(delta)
         if delta < epsilon * (1-gamma) *gamma: break
         for s in range(12):
-            if not np.isnan(p[s]) and not p[s]==-1: #skipping evaluation for terminal and impossible states
+            if not p[s]==-2 and not p[s]==-1: #skipping evaluation for terminal and impossible states
                 v = np.zeros((1,12))
                 v[0,s] = 1.0 # assuming probability of being in current state as 1
                 #2- Policy improvement
                 a = return_expected_action(u, T, v)
                 if a != p[s]: p[s] = a
+        print(u[0:4])
+        print(u[4:8])
+        print(u[8:12])
         print_policy(p, shape=(3,4))
 
     print("=================== FINAL RESULT ==================")
