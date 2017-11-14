@@ -60,6 +60,8 @@ class Field:
         self.np_matrix = np.zeros(shape=(len(self.moves), lines * cols, lines * cols))
         # as generating square transition matrices for each of M possible transitions
         self.blocked_cells = blocked_cells_list
+        self.succsess_cells_list = succsess_cells_list
+        self.defeat_cells_list = defeat_cells_list
         pass
 
     def index_from_coords(self, x, y):
@@ -69,18 +71,25 @@ class Field:
         return (index % self.cols, index // self.cols)
 
     def position_is_possible(self, final_position):
-        if 0 <= final_position[0] < self.cols and \
+        return 0 <= final_position[0] < self.cols and \
                                 0 <= final_position[1] < self.lines and \
-                        final_position not in self.blocked_cells:
-            return True
-        else:
-            return False
+                        final_position not in self.blocked_cells
+
+    def is_terminal_state(self, y_coord, x_coord):
+        return (y_coord, x_coord) in self.succsess_cells_list or (y_coord, x_coord) in self.defeat_cells_list
+
+
 
     def fill_transition_matrix(self):
         for move_indx in range(len(self.moves)):  # switching over moves
             for y in range(self.lines):
                 for x in range(self.cols):
+
+                    start_coords = (y,x)
                     start_position_indx = self.index_from_coords(x=x, y=y)
+                    if self.is_terminal_state( x_coord= x, y_coord=y):
+                        continue
+
 
                     for transition_name in self.moves[move_indx].moves_dict:
                         exactly_this_transition_prob = self.moves[move_indx].moves_dict[transition_name]
@@ -117,12 +126,11 @@ class Field:
                         line += str(self.np_matrix[m][k][self.index_from_coords(x=x, y=y)]) + " "
                     print(line)
 
-        pass
 
 
 list_of_blocked_cells = [(1, 1)]  # coords
-finish_list = []  # good_endgame
-death_list = []  # bad andgame
+finish_list = [(0,3)]  # good_endgame
+death_list = [(1,3)]  # bad andgame
 
 move_top = Move(dirs_and_probabilities_dict={'top': 0.8, 'bot': 0.0, 'left': 0.1, 'right': 0.1})
 move_right = Move(dirs_and_probabilities_dict={'top': 0.1, 'bot': 0.1, 'left': 0.0, 'right': 0.8})
@@ -153,3 +161,4 @@ c1 = field_object.index_from_coords(2, 3)
 c2 = field_object.coords_from_index(c1)
 print(c1)
 print(c2)
+np.save('T', field_object.get_transition_matrix())

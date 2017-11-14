@@ -6,15 +6,28 @@ import numpy as np
 
 def return_state_utility(v, T, u, reward, gamma):
     action_array = np.zeros(4)
-	#ToDo: calculate the state value (utility)
-	state_utility = -1000    
-    
-	return state_utility
+
+    for action in range (len(action_array)):
+        action_array[action] = action #indexes of actions from Transition matrix
+
+    print(T)
+
+    actions_results_probalilities = []
+    for move in range (len(action_array)):
+        actions_results_probalilities.append(np.dot(v, T[move]) )
+    #now we have coefficients of transition to utilities of neighbouring states
+    for a in range (len(action_array)):
+        action_array[a] = np.sum (actions_results_probalilities[a] * u)
+
+    print(actions_results_probalilities)
+    state_utility = reward + gamma * max(action_array)
+
+    return state_utility
 
 def main():
 
     #ToDo: choose the state number
-    #state = set the state number
+    state = 8 #set the state number
 	
 	
     #Assuming that the discount factor is equal to 1.0
@@ -22,7 +35,7 @@ def main():
 
     #Starting state vector
     v = np.zeros(12)
-    v[state] = 1.0
+    v[state] = 1.0 #bottom left corner
 
     #Transition matrix loaded from file
     T = np.load("T.npy")

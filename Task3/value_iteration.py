@@ -11,9 +11,23 @@ def return_state_utility(v, T, u, reward, gamma):
     """Return the utility of a single state.
     This is an implementation of the Bellman equation.
     """
-	#ToDo: calculate the state utility
-	state_utility = -1000
-    
+    action_array = np.zeros(4)
+
+    for action in range(len(action_array)):
+        action_array[action] = action  # indexes of actions from Transition matrix
+
+    #print(T)
+
+    actions_results_probalilities = []
+    for move in range(len(action_array)):
+        actions_results_probalilities.append(np.dot(v, T[move]))
+    # now we have coefficients of transition to utilities of neighbouring states
+    for a in range(len(action_array)):
+        action_array[a] = np.sum(actions_results_probalilities[a] * u)
+
+    #print(actions_results_probalilities)
+    state_utility = reward + gamma * max(action_array)
+
     return state_utility
 
 def generate_graph(utility_list):
@@ -41,7 +55,7 @@ def generate_graph(utility_list):
 def main():
     #Change as you want
     tot_states = 12
-    gamma = 0.999 #Discount factor
+    gamma = 0.9 #Discount factor
     iteration = 0 #Iteration counter
     epsilon = 0.01 #Stopping criteria small value
 
@@ -72,13 +86,18 @@ def main():
         for s in range(tot_states):
             reward = r[s]
             v = np.zeros((1,tot_states))
-            v[0,s] = 1.0
+            v[0,s] = 1.0 #marking probability of being in some of states as 1
             u1[s] = return_state_utility(v, T, u, reward, gamma)
+            delta = abs(u - u1)
+           # print("DELTA")
+            print(u)
+            print(u1)
+            print(delta)
+            delta = np.sum(delta)
             #ToDo: calculate delta
-			delta = 10000
+			#delta = 10000
         #Stopping criteria
-        #ToDo: write the stopping criteria
-		if delta < -1:
+        if delta < epsilon* (1-gamma) * gamma:
                 print("=================== FINAL RESULT ==================")
                 print("Iterations: " + str(iteration))
                 print("Delta: " + str(delta))
