@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-
-#The policy iteration algorithm.
-
 import numpy as np
 
 def return_policy_evaluation(p, u, r, T, gamma):
@@ -45,11 +42,7 @@ def return_expected_action(u, T, v):
         c = np.dot(a,u)
         actions_array[action] = c[0]
 
-
-
     expected_action = np.argmax(actions_array)
-	
-	#ToDo: Return the expected action.
     return expected_action
 
 def print_policy(p, shape):
@@ -94,9 +87,6 @@ def main():
     u = np.array([0.0, 0.0, 0.0,  0.0,
                    0.0, 0.0, 0.0,  0.0,
                    0.0, 0.0, 0.0,  0.0])
-
-    #u[0,3] = [0,3]
-
     #Reward vector
     r = np.array([-0.04, -0.04, -0.04,  +1.0,
                   -0.04,   0.0, -0.04,  -1.0,
@@ -112,7 +102,7 @@ def main():
         #Stopping criteria
         delta = np.sum(abs(u-u1))
 
-        print(delta)
+        # print(delta)
         if delta < epsilon * (1-gamma) *gamma: break
         for s in range(12):
             if not p[s]==-2 and not p[s]==-1: #skipping evaluation for terminal and impossible states
@@ -121,10 +111,10 @@ def main():
                 #2- Policy improvement
                 a = return_expected_action(u, T, v)
                 if a != p[s]: p[s] = a
-        print(u[0:4])
-        print(u[4:8])
-        print(u[8:12])
-        print_policy(p, shape=(3,4))
+        # print(u[0:4])
+        # print(u[4:8])
+        # print(u[8:12])
+        # print_policy(p, shape=(3,4))
 
     print("=================== FINAL RESULT ==================")
     print("Iterations: " + str(iteration))

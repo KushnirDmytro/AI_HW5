@@ -16,8 +16,6 @@ def return_state_utility(v, T, u, reward, gamma):
     for action in range(len(action_array)):
         action_array[action] = action  # indexes of actions from Transition matrix
 
-    #print(T)
-
     actions_results_probalilities = []
     for move in range(len(action_array)):
         actions_results_probalilities.append(np.dot(v, T[move]))
@@ -25,7 +23,6 @@ def return_state_utility(v, T, u, reward, gamma):
     for a in range(len(action_array)):
         action_array[a] = np.dot(actions_results_probalilities[a], u)
 
-    #print(actions_results_probalilities)
     state_utility = reward + gamma * max(action_array)
 
     return state_utility
@@ -89,13 +86,8 @@ def main():
             v[0,s] = 1.0 #marking probability of being in some of states as 1
             u1[s] = return_state_utility(v, T, u, reward, gamma)
             delta = abs(u - u1)
-           # print("DELTA")
-            print(u)
-            print(u1)
-            print(delta)
             delta = np.sum(delta)
             #ToDo: calculate delta
-			#delta = 10000
         #Stopping criteria
         if delta < epsilon* (1-gamma) / gamma:
                 print("=================== FINAL RESULT ==================")

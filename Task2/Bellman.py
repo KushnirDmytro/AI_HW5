@@ -10,16 +10,14 @@ def return_state_utility(v, T, u, reward, gamma):
     for action in range (len(action_array)):
         action_array[action] = action #indexes of actions from Transition matrix
 
-    print(T)
-
     actions_results_probalilities = []
     for move in range (len(action_array)):
         actions_results_probalilities.append(np.dot(v, T[move]) )
     #now we have coefficients of transition to utilities of neighbouring states
     for a in range (len(action_array)):
-        action_array[a] = np.dot (actions_results_probalilities[a] , u)
+        action_array[a] = np.dot (u, actions_results_probalilities[a] )
 
-    print(actions_results_probalilities)
+    # print(actions_results_probalilities)
     state_utility = reward + gamma * max(action_array)
 
     return state_utility

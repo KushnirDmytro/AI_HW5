@@ -10,7 +10,6 @@ class Cell:
         return (self.col, self.line)
 
 
-
 class Succsess_Cell(Cell):
     def __init__(self, line, col, bonus):
         Cell.__init__(self, line=line, col=col)
@@ -34,7 +33,6 @@ class Rules:
 
 class Move:
     def __init__(self, dirs_and_probabilities_dict):
-        # self.dir_name = dir_name
         self.moves_dict = dirs_and_probabilities_dict  # inserting direction and probabilities
 
 
@@ -113,9 +111,9 @@ class Field:
 
     def pretty_print(self):
         for m in range(len(self.moves)):
-            print(" FOR MOVE #" + str(m) + "<== trbl")
+            print("============ FOR MOVE #" + str(m) + "<== T_R_B_L ===clockwise====")
             for k in range(self.cols * self.lines):
-                print("from cell" + str(self.coords_from_index(k)))
+                print("===== from cell" + str(self.coords_from_index(k)))
                 for y in range(self.lines):
 
                     line = ""
@@ -149,17 +147,5 @@ field_object.fill_transition_matrix()
 
 field_object.pretty_print()
 
-# print(field_object.np_matrix)
-
-
-
-print(1 < 2 < 3)
-
-print(10 % 3, 10 // 3)
-
-c1 = field_object.index_from_coords(2, 3)
-c2 = field_object.coords_from_index(c1)
-print(c1)
-print(c2)
 np.save('T', field_object.get_transition_matrix())
-print(field_object.get_transition_matrix())
+# print(field_object.get_transition_matrix())

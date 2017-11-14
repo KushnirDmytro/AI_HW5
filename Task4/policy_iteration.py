@@ -9,20 +9,6 @@ def return_policy_evaluation(p, u, r, T, gamma):
     #newU = np.zeros(12) # in case of returnitg new utulities, there are more iterations (24 VS 33)
     for state in range(len(u)):
         u[state] = r[state] + gamma * np.dot(u, T[p[state]][state])
-
-    return u
-    # NewU = np.zeros(12)
-    # # print(p)
-    # print("=======>")
-    # print(u)
-    #
-    # for state in range(len(u)) :
-    #     policy = p[state]
-    #     if not policy==-2 and not policy == -1:
-    #         u[state] = r[state] + gamma * np.sum(np.dot(u, T[policy]))
-        # else:
-        #     if policy == -1:
-        #         NewU[state] = r[state]
     return u
 
 
@@ -40,29 +26,14 @@ def return_expected_action(u, T, v):
     @return expected action (int)
     """
     actions_array = np.zeros(4)
-    expected_action = max(actions_array)
 
     for action in range(len(actions_array)):
         a = np.dot(v, T[action])
-        # print(a)
-        # print ("======================================================")
-        # #b = np.dot(v, T[action])
-        # #print(b)
-        # print ("======================================================")
-        # print ("======================================================")
-        # print ("======================================================")
         c = np.dot(a,u)
-        # print(u)
-        # print(c)
         actions_array[action] = c[0]
-        pass
-        # actions_array[action] = np.dot(v, T)
-
-
 
     expected_action = np.argmax(actions_array)
-	
-	#ToDo: Return the expected action.
+
     return expected_action
 
 def print_policy(p, shape):
@@ -108,7 +79,6 @@ def main():
                    0.0, 0.0, 0.0,  0.0,
                    0.0, 0.0, 0.0,  0.0])
 
-    #u[0,3] = [0,3]
 
     #Reward vector
     r = np.array([-0.04, -0.04, -0.04,  +1.0,
@@ -125,8 +95,8 @@ def main():
         #Stopping criteria
         delta = np.sum(abs(u-u1))
 
-        print(delta)
-        if delta < epsilon * (1-gamma) *gamma: break
+        # print(delta)
+        if delta < epsilon * (1-gamma) / gamma: break
         for s in range(12):
             if not p[s]==-2 and not p[s]==-1: #skipping evaluation for terminal and impossible states
                 v = np.zeros((1,12))
@@ -134,10 +104,10 @@ def main():
                 #2- Policy improvement
                 a = return_expected_action(u, T, v)
                 if a != p[s]: p[s] = a
-        print(u[0:4])
-        print(u[4:8])
-        print(u[8:12])
-        print_policy(p, shape=(3,4))
+        # print(u[0:4])
+        # print(u[4:8])
+        # print(u[8:12])
+        # print_policy(p, shape=(3,4))
 
     print("=================== FINAL RESULT ==================")
     print("Iterations: " + str(iteration))
