@@ -62,18 +62,18 @@ class Field:
         self.defeat_cells_list = defeat_cells_list
         pass
 
-    def index_from_coords(self, x, y):
+    def index_from_coords(self, y, x):
         return y * self.cols + x
 
     def coords_from_index(self, index):
-        return (index % self.cols, index // self.cols)
+        return (index // self.cols, index % self.cols)
 
     def position_is_blocked(self, position):
         return position in self.blocked_cells
 
     def position_is_possible(self, final_position):
-        return 0 <= final_position[0] < self.cols and \
-                                0 <= final_position[1] < self.lines and\
+        return 0 <= final_position[0] < self.lines and \
+                                0 <= final_position[1] < self.cols and\
                not self.position_is_blocked(final_position)
 
     def is_terminal_state(self, y_coord, x_coord):
@@ -96,13 +96,12 @@ class Field:
                         exactly_this_transition_prob = self.moves[move_indx].moves_dict[transition_name]
                         if exactly_this_transition_prob <= 0: continue  # case of absent probability
                         transition_offset = self.rules.moves_dirs[transition_name]
-                        final_position_coords = (x + transition_offset[0], y + transition_offset[1])
-                        final_position_indx = self.index_from_coords(x=final_position_coords[0],
-                                                                     y=final_position_coords[1])
+                        final_position_coords = (y + transition_offset[0], x + transition_offset[1])
+                        final_position_indx = self.index_from_coords(x=final_position_coords[1],
+                                                                     y=final_position_coords[0])
 
                         if self.position_is_possible(final_position_coords):
-                            self.np_matrix[move_indx][start_position_indx][
-                                final_position_indx] += exactly_this_transition_prob
+                            self.np_matrix[move_indx][start_position_indx][final_position_indx] += exactly_this_transition_prob
                         else:  # case of impossible final_transition
                             self.np_matrix[move_indx][start_position_indx][
                                 start_position_indx] += exactly_this_transition_prob
@@ -121,9 +120,13 @@ class Field:
             print(" FOR MOVE #" + str(m) + "<== trbl")
             for k in range(self.cols * self.lines):
                 print("from cell" + str(self.coords_from_index(k)))
-                for x in range(self.cols):
+                for y in range(self.lines):
+
                     line = ""
-                    for y in range(self.lines):
+                    for x in range(self.cols):
+                        if (y,x) == (1,1):
+                            line+= " *  "
+                            continue
                         line += str(self.np_matrix[m][k][self.index_from_coords(x=x, y=y)]) + " "
                     print(line)
 
@@ -163,3 +166,4 @@ c2 = field_object.coords_from_index(c1)
 print(c1)
 print(c2)
 np.save('T', field_object.get_transition_matrix())
+print(field_object.get_transition_matrix())

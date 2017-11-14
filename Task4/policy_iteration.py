@@ -6,10 +6,18 @@
 import numpy as np
 
 def return_policy_evaluation(p, u, r, T, gamma):
-    #ToDo: implement the policy evaluation
-	u = np.zeros(12)
-	
-    return u
+    NewU = np.zeros(12)
+    # print(p)
+    # print(u)
+
+    for state in range(len(u)) :
+        policy = p[state]
+        if not np.isnan(policy) and not policy == -1:
+            NewU[state] = r[state] + gamma * np.sum(np.dot(u, T[p[state]]))
+
+    return NewU
+
+
 
 def return_expected_action(u, T, v):
     """Return the expected action.
@@ -24,6 +32,9 @@ def return_expected_action(u, T, v):
     @return expected action (int)
     """
     actions_array = np.zeros(4)
+
+    expected_action = max(actions_array)
+
     expected_action = 1
 	
 	#ToDo: Return the expected action.
@@ -88,9 +99,9 @@ def main():
         delta = np.sum(abs(u-u1))
         if delta < epsilon * (1-gamma) *gamma: break
         for s in range(12):
-            if not np.isnan(p[s]) and not p[s]==-1:
+            if not np.isnan(p[s]) and not p[s]==-1: #skipping evaluation for terminal and impossible states
                 v = np.zeros((1,12))
-                v[0,s] = 1.0
+                v[0,s] = 1.0 # assuming probability of being in current state as 1
                 #2- Policy improvement
                 a = return_expected_action(u, T, v)
                 if a != p[s]: p[s] = a

@@ -21,7 +21,7 @@ def return_state_utility(v, T, u, reward, gamma):
     actions_results_probalilities = []
     for move in range(len(action_array)):
         actions_results_probalilities.append(np.dot(v, T[move]))
-    # now we have coefficients of transition to utilities of neighbouring states
+    # now we have coefficients of transition probalilities to neighbouring states
     for a in range(len(action_array)):
         action_array[a] = np.sum(actions_results_probalilities[a] * u)
 
@@ -55,7 +55,7 @@ def generate_graph(utility_list):
 def main():
     #Change as you want
     tot_states = 12
-    gamma = 0.9999 #Discount factor
+    gamma = 0.999 #Discount factor
     iteration = 0 #Iteration counter
     epsilon = 0.01 #Stopping criteria small value
 
@@ -97,7 +97,7 @@ def main():
             #ToDo: calculate delta
 			#delta = 10000
         #Stopping criteria
-        if delta < epsilon* (1-gamma) * gamma:
+        if delta < epsilon* (1-gamma) / gamma:
                 print("=================== FINAL RESULT ==================")
                 print("Iterations: " + str(iteration))
                 print("Delta: " + str(delta))
